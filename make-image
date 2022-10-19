@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+<<<<<<< HEAD
 set -xe
+=======
+#set -xe
+>>>>>>> b17de11 (update)
 
 mkdir -p dist /dist
 
