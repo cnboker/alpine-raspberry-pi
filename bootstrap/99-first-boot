@@ -34,8 +34,4 @@ depend() {
 EOF
 
 chmod +x /etc/init.d/first-boot /usr/bin/first-boot
-<<<<<<< HEAD
-=======
-apk add openrc
->>>>>>> b17de11 (update)
 rc-update add first-boot

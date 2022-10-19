@@ -1,0 +1,11 @@
+#!/bin/sh
+
+apk add docker
+#make docker always start on Alpine boot
+rc-update add docker boot
+#Start the docker service and check its status
+service docker start
+#check status
+service docker status
+#install node container
+#docker run --rm hello-world

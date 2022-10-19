@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -xe
+
+# override repository
+cat <<EOF >/etc/apk/repositories
+http://mirrors.bfsu.edu.cn/alpine/v3.16/main
+http://mirrors.bfsu.edu.cn/alpine/v3.16/community
+http://mirrors.bfsu.edu.cn/alpine/edge/main
+http://mirrors.bfsu.edu.cn/alpine/edge/community
+http://mirrors.bfsu.edu.cn/alpine/edge/testing
+EOF

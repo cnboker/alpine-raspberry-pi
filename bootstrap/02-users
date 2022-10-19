@@ -2,20 +2,18 @@
 
 set -xe
 
-FIRST_USER_NAME=pi
+FIRST_USER_NAME=user
 FIRST_USER_PASS=raspberry
+mkdir -p /srv
+#h:home directory
+#添加新用户user,并将/srv目录作为home目录
+adduser -h /srv -D $FIRST_USER_NAME
+#-R:recurse
+# 将目录srv所有权赋予user
+chown -R $FIRST_USER_NAME  /srv
+# 7表示目录所有者拥有多写执行的权利，其他用户只有执行权力,ref:https://chmodcommand.com/chmod-701/
+chmod 701 /srv
 
 apk add sudo
-
-for GRP in spi i2c gpio; do
-	addgroup --system $GRP
-done
-
-adduser -s /bin/ash -D $FIRST_USER_NAME
-
-for GRP in adm dialout cdrom audio users video games input tty gpio spi i2c netdev; do
-  adduser $FIRST_USER_NAME $GRP
-done
-
 echo "$FIRST_USER_NAME:$FIRST_USER_PASS" | /usr/sbin/chpasswd
 echo "$FIRST_USER_NAME ALL=NOPASSWD: ALL" >> /etc/sudoers

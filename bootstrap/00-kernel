@@ -2,10 +2,9 @@
 
 set -xe
 
-<<<<<<< HEAD
 apk add --update linux-rpi linux-rpi4 raspberrypi-bootloader zram-init
-=======
-apk add --update openrc linux-rpi linux-rpi4 raspberrypi-bootloader zram-init
+apk add alpine-conf
+
 >>>>>>> b17de11 (update)
 rc-update add zram-init boot
 
@@ -49,6 +48,15 @@ for cpu in /sys/devices/system/cpu/cpufreq/policy*; do
   echo performance > ${cpu}/scaling_governor
 done
 EOF
+
+# 配置GPU
+cat <<EOF > /boot/usercfg.txt
+dtoverlay=vc4-kms-v3d
+max_framebuffers=2
+gpu_mem=512
+hdmi_enable_4kp60=1
+EOF
+
 
 chmod +x /etc/local.d/cpufreq.start
 rc-update add local default
