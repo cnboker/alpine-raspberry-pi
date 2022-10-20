@@ -1,6 +1,5 @@
-
 #!/bin/sh
 
-apk add mesa-dri-vc4 dbus setxkbmap kbd xrandr xset
+apk add mesa-dri-vc4 mesa-egl dbus setxkbmap kbd xrandr xset
 
-apk update & apk upgrade
+#apk update & apk upgrade
