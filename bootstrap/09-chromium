@@ -28,7 +28,6 @@ url="https://baidu.com"
 
 exec chromium-browser $url --window-size=$width,$height --window-position=0,0 --kiosk --no-sandbox --full-screen --incognito --noerrdialogs --disable-translate --no-first-run --fast --fast-start --ignore-gpu-blacklist --disable-quic --enable-fast-unload --enable-tcp-fast-open ---enable-native-gpu-memory-buffers --enable-gpu-rasterization --enable-zero-copy --disable-infobars --disable-features=TranslateUI --disk-cache-dir=/tmp --enable-features=VaapiVideoEncoder,VaapiVideoDecoder,CanvasOopRasterization 
 
-exec chromium-browser $url  --window-size=$width,$height --widown-position=0,0 --extra-plugin-dir=/usr/lib/nsbrowser/plugins --ozone-platform-hint=auto --enable-features=VaapiVideoEncoder,VaapiVideoDecoder,CanvasOopRasterization --enable-crashpad --flag-switches-begin --flag-switches-end --ozone-platform=x11
 
 EOF
 
