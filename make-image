@@ -44,15 +44,15 @@ BOOT_PARTUUID="${IMGID}-01"
 ROOT_PARTUUID="${IMGID}-02"
 
 apt-get update
-curl https://raw.githubusercontent.com/alpinelinux/alpine-chroot-install/master/alpine-chroot-install | sh
-
+#curl https://raw.githubusercontent.com/alpinelinux/alpine-chroot-install/master/alpine-chroot-install | sh
+sh ./chroot-install
 cp -R bootstrap/ /alpine/
 /alpine/enter-chroot run-parts /bootstrap/
 
 rm -rf /alpine/var/lib/apt/lists/*
 rm -rf /alpine/var/cache/apk/*
 rm -rf /alpine/root/*
-rm -rf /alpine/bootstrap/
+#rm -rf /alpine/bootstrap/
 rm  /alpine/env.sh /alpine/etc/resolv.conf /alpine/enter-chroot /alpine/destroy
 find /alpine -iname "*-" -delete
 find /alpine -iname "*~" -delete

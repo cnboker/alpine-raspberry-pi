@@ -13,3 +13,5 @@ The image automatically setup and configures:
 * swap
 * openssh server
 * root partition auto-expand on first boot
+
+ sudo ./bin/act --platform ubuntu-latest=lucasalt/act_base:latest  -v
