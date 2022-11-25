@@ -1,0 +1,58 @@
+#!/bin/sh
+# Install video driver, x11, chromium, font,docker after network is available
+# All services must reside in the /etc/init.d or /usr/local/etc/init.d directories
+set -xe
+# EOF > :覆盖
+# EOF >> 追加
+cat <<EOF > /usr/bin/after-setup
+#!/bin/sh
+
+#how to use /dev/null : https://linuxhint.com/what_is_dev_null/
+
+sleep 5
+if ping -c 1 8.8.8.8 > /dev/null; then
+    echo "Have internet connectivity"
+    chmod +x /bootstrap/08-driver
+    chmod +x /bootstrap/09-x11
+    chmod +x /bootstrap/10-chromium
+    chmod +x /bootstrap/11-chinese-font
+    chmod +x /bootstrap/12-docker
+
+    sh /bootstrap/08-driver
+    sh /bootstrap/09-x11
+    sh /bootstrap/10-chromium
+    sh /bootstrap/11-chinese-font
+    sh /bootstrap/12-docker
+    
+  docker run -d \
+    -v /srv/file:/web \
+    -p 80:8080 \
+   --restart=always \
+    halverneus/static-file-server:latest
+
+    rc-update del after-setup
+    rm /etc/init.d/after-setup /usr/bin/after-setup
+    apk update && apk upgrade
+    reboot
+else
+    echo "Do not have connectivity"
+fi
+
+EOF
+
+cat <<EOF > /etc/init.d/after-setup
+#!/sbin/openrc-run
+
+command="/usr/bin/after-setup"
+command_background=false
+
+depend(){
+    need net
+    after modules
+    need localmount
+}
+EOF
+
+chmod +x /etc/init.d/after-setup /usr/bin/after-setup
+#/etc/init.d/after-setup增加到服务
+rc-update add after-setup

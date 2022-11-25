@@ -1,6 +1,7 @@
 #!/bin/sh
 
-apk add docker
+# apk add docker
+curl -sfL https://balena.io/engine/install.sh | sh
 #make docker always start on Alpine boot
 rc-update add docker boot
 #Start the docker service and check its status

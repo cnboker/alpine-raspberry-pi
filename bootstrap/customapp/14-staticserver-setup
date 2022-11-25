@@ -1,0 +1,18 @@
+#!/bin/sh
+
+apk add nodejs
+
+cat <<EOF > /etc/init.d/staicserver
+#!/sbin/openrc-run
+
+command="node /staticserver/index.js"
+command_background=false
+
+depend(){
+
+}
+EOF
+
+chmod +x /etc/init.d/staticserver
+rc-update add staticserver
+

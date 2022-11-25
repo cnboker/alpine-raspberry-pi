@@ -5,7 +5,7 @@ set -xe
 apk add --update linux-rpi linux-rpi4 raspberrypi-bootloader 
 apk add alpine-conf
 
-echo "modules=loop,squashfs,sd-mod,usb-storage root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes console=tty1 rootwait quiet" > /boot/cmdline.txt
+echo "modules=loop,squashfs,sd-mod,usb-storage root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes console=tty1 rootwait quiet usbhid.mousepoll=0" > /boot/cmdline.txt
 
 cat <<EOF > /boot/config.txt
 [pi3]
@@ -52,6 +52,20 @@ dtoverlay=vc4-kms-v3d
 max_framebuffers=2
 gpu_mem=512
 hdmi_enable_4kp60=1
+
+#2560x1440(2k),60hz,16:8的屏幕
+hdmi_cvt 2560 1440 60 3 0 0 0
+#hdmi_group=2 means DMT (Display Monitor Timings; the standard typically used by monitors)
+hdmi_group=2
+#hdmi_mode=87 indicates the resolution mode we set before.
+hdmi_mode=87
+#max_framebuffer_width=2560
+#max_framebuffer_height=1440
+#required
+hdmi_drive=1
+hdmi_boost=7
+#required,Enables the ignoring of EDID/display data if your display is a crappy Chinese one
+hdmi_ignore_edid=0xa5000080
 EOF
 
 

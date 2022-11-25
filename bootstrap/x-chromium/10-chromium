@@ -1,0 +1,30 @@
+#!/bin/sh
+
+#add video decode package
+apk add midori gst-plugins-base gst-plugins-good gst-libav
+#创建x11自启动
+cat <<EOF > /srv/.profile
+#!/bin/sh
+#start x server
+exec startx
+EOF
+
+#自启动浏览器,<\EOF>确保变量有效
+cat <<\EOF > /srv/.xinitrc
+#!/bin/sh
+
+# turn off screensaver
+xset -dpms
+xset s off
+xset s noblank
+
+# screen size
+width="1920"
+height="1080"
+
+# url
+url="http://localhost"
+
+exec chromium-browser $url --window-size=2560,1440 --window-position=0,0 --full-screen --enable-webgl --ignore-gpu-blacklist
+EOF
+
