@@ -1,7 +1,8 @@
 #!/bin/sh
+#fix Cannot connect to the Docker daemon at unix:///var/run/docker.sock
+echo 'none /sys/fs/cgroup cgroup defaults 0 0'>>/etc/fstab
 
-# apk add docker
-curl -sfL https://balena.io/engine/install.sh | sh
+apk add docker
 #make docker always start on Alpine boot
 rc-update add docker boot
 #Start the docker service and check its status
@@ -9,4 +10,13 @@ service docker start
 #check status
 service docker status
 #install node container
-#docker run --rm hello-world
+docker run -d \
+-v /srv/file:/web \
+-p 80:8080 \
+--restart=always \
+halverneus/static-file-server:latest
+
+docker run -d \
+-p 8000:8000 \
+--restart=always \
+szsong100/contentwatcher:latest

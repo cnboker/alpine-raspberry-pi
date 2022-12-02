@@ -1,5 +1,7 @@
 #!/bin/sh
-setup_sshd -c openssh
+apk add openssh
+
+rc-update add sshd
 
 cat <<EOF >> /etc/ssh/sshd_config
 
@@ -123,6 +125,6 @@ X11Forwarding no
 
 EOF
 
-service sshd restart
+/etc/init.d/sshd start
 
 ip -a

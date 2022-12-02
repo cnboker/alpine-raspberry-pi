@@ -15,3 +15,5 @@ The image automatically setup and configures:
 * root partition auto-expand on first boot
 
  sudo ./bin/act --platform ubuntu-latest=lucasalt/act_base:latest  -v
+
+ ### 推送docker image 到服务器

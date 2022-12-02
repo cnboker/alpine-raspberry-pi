@@ -1,0 +1,33 @@
+#!/bin/sh
+
+apk add nodejs
+
+cat <<EOF > /etc/init.d/staticserver
+#!/sbin/openrc-run
+
+command="node /staticserver/index.js &"
+command_background=false
+
+depend(){
+  after modules
+  need localmount
+}
+EOF
+
+chmod +x /etc/init.d/staticserver
+rc-update add staticserver
+
+cat <<EOF > /etc/init.d/contentWatcher
+#!/sbin/openrc-run
+
+command="node /contentWatcher/index.js &"
+command_background=false
+
+depend(){
+  after modules
+  need localmount
+}
+EOF
+
+chmod +x /etc/init.d/contentWatcher
+rc-update add contentWatcher

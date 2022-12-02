@@ -1,7 +1,6 @@
 #!/bin/sh
 
-#add video decode package
-apk add midori gst-plugins-base gst-plugins-good gst-libav
+apk add chromium
 #创建x11自启动
 cat <<EOF > /srv/.profile
 #!/bin/sh

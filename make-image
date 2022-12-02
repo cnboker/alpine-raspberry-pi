@@ -49,19 +49,21 @@ sh ./chroot-install
 
 chmod +x bootstrap/*
 
-cp -R staticserver/ /alpine/
-cp -R bootstrap/ /alpine/
+cp -R staticserver/ /alpine
+cp -R contentWatcher/ /alpine
+cp -R bootstrap/ /alpine
 /alpine/enter-chroot run-parts /bootstrap/
 
 rm -rf /alpine/var/lib/apt/lists/*
 rm -rf /alpine/var/cache/apk/*
 rm -rf /alpine/root/*
-#rm -rf /alpine/bootstrap/
+rm -rf /alpine/bootstrap/
 rm  /alpine/env.sh /alpine/etc/resolv.conf /alpine/enter-chroot /alpine/destroy
 find /alpine -iname "*-" -delete
 find /alpine -iname "*~" -delete
 
 umount -lf /alpine
+
 
 # shrink image
 ROOT_PART_START=$(parted -ms "$OUTPUT_IMG" unit B print | tail -n 1 | cut -d ':' -f 2 | tr -d 'B')
@@ -88,5 +90,6 @@ FREE_START=$(parted -ms "$OUTPUT_IMG" unit B print free | tail -1 | cut -d ':' -
 truncate -s "$FREE_START" "$OUTPUT_IMG"
 
 gzip -c "$OUTPUT_IMG" > "dist/alpine-rpi-$ALPINE_BRANCH-$ARCH.img.gz"
+
 
 echo "DONE."
