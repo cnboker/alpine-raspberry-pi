@@ -1,5 +1,5 @@
 const config = {
-    root:'/srv/file',
+    root:'/media/internal/dclient/app',
     port:8000
   }
   module.exports = config;
