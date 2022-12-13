@@ -53,6 +53,12 @@ export const postConfigInfo = (configInfo) => (dispatch) => {
   });
 };
 
+//从本地磁盘获取配置信息
+export const getConfigInfo = () => (dispatch) => {
+  api.getConfigInfo().then((response) => {
+    dispatch(receiveConfig(response.data))
+  });
+};
 
 //key:deviceId
 export const requestConfig = (token, key) => (dispatch) => {

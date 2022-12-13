@@ -52,8 +52,7 @@ class Configer {
   }
 
   rootDirReady = async () => {
-    const exist = await fileExists(APP_DIR);
-    if (!exist) {
+    if (!fileExists(APP_DIR)) {
       await mkdir(APP_DIR)
     }
   };
@@ -84,11 +83,11 @@ class Configer {
 }
 
 export const APPID = "com.ioliz.dc.app";
-export const APP_DIR = "/media/internal/dclient";
-export const APP_DOWNLOAD_DIR = "/media/internal/dclient/app/downloads";
+export const APP_DIR = `/home/${require("os").userInfo().username}/dclient`;
+export const APP_DOWNLOAD_DIR = `${APP_DIR}/app/downloads`;
 export const USB_ROOT = "/tmp/usb/sda/sda1";
 export const instance: Configer = Configer.instance;
-export const Service_Server = process.env.REACT_APP_MEMBER_URL;
+export const Service_Server = process.env.REACT_APP_SERVICE_URL;
 export const Auth_Server = process.env.REACT_APP_AUTH_URL;
 //是否是单元测试
 export const isInTest = typeof global.it === 'function';

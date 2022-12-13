@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import QRCode from "qrcode.react";
+import { useNavigate } from "react-router";
 
 import {
   postDeviceInfo,
@@ -24,7 +25,7 @@ export default () => {
   const [id, setId] = useState();
   const delay = 3000;
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const qrState = useSelector((state) => state.qrReducer);
   const { QR, token, configInfo } = qrState;
 
@@ -38,7 +39,7 @@ export default () => {
     } else if (token.access_token && runStep === RunStep.RequestToken) {
       setMessage(() => "upload device information...");
       setRunStep(() => RunStep.RequestConfig);
-      postDeviceInfo(token.access_token, QR.authorizeCode)
+      dispatch(postDeviceInfo(token.access_token, QR.authorizeCode))
     } else if (!configInfo.fileServer && runStep === RunStep.RequestConfig) {
       setMessage(() => "request config information...");
       console.log("request config...");
@@ -47,10 +48,11 @@ export default () => {
     } else if (configInfo.fileServer && runStep === RunStep.RequestConfig) {
       setRunStep(() => RunStep.Finished);
       setMessage(() => "config finished!");
-
       configInfo.token = token.access_token;
       configInfo.deviceId = id;
       dispatch(postConfigInfo(configInfo))
+    }else if(runStep === RunStep.Finished){
+      navigate("/play");
     }
   };
 

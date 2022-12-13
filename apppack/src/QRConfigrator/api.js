@@ -38,9 +38,19 @@ export const postConfigInfo = (info) => {
   });
 };
 
+export const getConfigInfo = (info) => {
+  var url = `${process.env.REACT_APP_LOCAL_PROXY_URL}/api/getConfigInfo`;
+  return axios({
+    url,
+    method: "get",
+  });
+};
+
+
+
 //key:deviceId
 export const requestConfig = (token) => {
-  var url = `${process.env.REACT_APP_MEMBER_URL}/api/requestConfig`;
+  var url = `${process.env.REACT_APP_SERVICE_URL}/api/requestConfig`;
   return axios({
     url,
     method: "get",
@@ -51,7 +61,7 @@ export const requestConfig = (token) => {
 };
 
 export const requestInstance = (token) => {
-  var url = `${process.env.REACT_APP_MEMBER_URL}/api/instance`;
+  var url = `${process.env.REACT_APP_SERVICE_URL}/api/instance`;
   return axios({
     url,
     method: "get",

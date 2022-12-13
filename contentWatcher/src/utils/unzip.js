@@ -1,7 +1,8 @@
-const fs = require("fs");
-const unzip = require("unzip-stream");
+
 
 module.exports.unzip = function (zipFilePath, extractToDirectoryPath, close) {
+  const fs = require("fs");
+  const unzip = require("unzip-stream");
   // createReadStream
   //   fs.createReadStream(zipFilePath)
   //     .pipe(unzip.Extract({ path: extractToDirectoryPath }))

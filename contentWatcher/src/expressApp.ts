@@ -1,13 +1,16 @@
 //import { chromiumOpen } from "./chromiumUtil";
 import axios from 'axios'
 import { instance } from './configer';
+const qs = require("querystring");
 
-export const runProxyServer = () => {
+export const appCreator = (close?:()=>void) => {
   const express = require('express')
   var bodyParser = require('body-parser');
+  var cors = require('cors')
   const app = express();
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(express.json())
+  app.use(cors())
   const port = 3000
 
   //上传设备信息
@@ -30,50 +33,58 @@ export const runProxyServer = () => {
         }
       });
     });
+    const data = {
+      deviceId: mac,
+      authorizeCode,
+      os: `${platform}-${arch}`,
+      os_ver: release,
+      mac,
+      ip: address,
+      name: hostname,
+    }
+
     var url = `${process.env.REACT_APP_SERVICE_URL}/api/License/PostDeviceInfo`;
+    console.log('upload device info data', data, url)
     await axios({
       url,
       method: "post",
-      data: {
-        deviceId: mac,
-        authorizeCode,
-        os: `${platform}-${arch}`,
-        os_ver: release,
-        mac,
-        ip: address,
-        name: hostname,
-      },
+      data: qs.stringify(data),
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: `Bearer ${token}`,
       },
     })
-    res.json({
-      arch,
-      platform,
-      hostname,
-      release,
-      address,
-      mac
-    });
+    return res.status(200).end()
   })
 
+  app.get('/api/getConfigInfo', async(req: any, res: any) => {
+    const info = await instance.read()
+    return res.json(info)
+  })
+  
   //写配置
-  app.get('/api/postConfigInfo', (req: any, res: any) => {
+  app.post('/api/postConfigInfo', (req: any, res: any) => {
+    console.log('body', req.body)
     instance
       .write(req.body)
       .then(() => {
         console.log("write configInfo success");
+        server && server.close();
+        close && close();
+        return res.status(200).end()
       })
       .catch((e) => {
         console.log("write config file error", e);
+        return res.status(500).end()
       });
-    res.sendStatus(200)
+
   })
 
-  app.listen(port, () => {
+  const server = app.listen(port, () => {
     console.log(`app listening on port ${port}`)
     //const configPage = "http://localhost:8000/config/index.html"
     //chromiumOpen(configPage)
   })
+
+  return { app, server };
 }

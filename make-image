@@ -49,8 +49,10 @@ sh ./chroot-install
 
 chmod +x bootstrap/*
 
-cp -R staticserver/ /alpine
-cp -R contentWatcher/ /alpine
+#cp -R staticserver/ /alpine
+#cp -R contentWatcher/ /alpine
+sh ./appbuild.sh
+cp -R /home/$USER/dclient/ /alpine
 cp -R bootstrap/ /alpine
 /alpine/enter-chroot run-parts /bootstrap/
 

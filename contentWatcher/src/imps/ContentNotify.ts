@@ -29,6 +29,7 @@ export default class ContentNotify implements IContentNotify {
   }
 
   private updateBeatheart() {
+    console.log('instance.token',instance.token)
     if (!instance.token) return;
     this.clientAPI.heartbeat(instance.deviceId).then(x => {
       console.log("update beatheart", x.data);

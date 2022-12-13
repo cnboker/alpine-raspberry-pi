@@ -1,31 +1,31 @@
 import { IContentWorker } from "./interfaces/IContentWorker";
 import { serviceRegister, getService } from "./imps/ServiceProiver";
 import { chromiumOpen } from "./chromiumUtil";
-import { runProxyServer } from "./httpServer";
-import { APP_DIR } from "./configer";
-import { fileExists } from "./imps/FileService";
+import { appCreator } from "./expressApp";
+import { instance } from "./configer";
 
-//设备配置文件如果不存在，则说明没有激活
-const deviceisActived = (): boolean => {
-  return fileExists(`${APP_DIR}/app.config`)
+const REACT_APP_LG_URL = "http://localhost:8000/"
+
+const startWorker = () => {
+  var worker = getService("IContentWorker") as IContentWorker;
+  worker.execute(() => {
+    const url = `${REACT_APP_LG_URL}downloads/index.html?${Date.now()}`
+    console.log(url)
+    chromiumOpen(url)
+  });
 }
 
-(() => {
+(async () => {
   console.log('start..')
-  runProxyServer();
-  return;
-  const REACT_APP_LG_URL = "http://localhost:8000/"
   serviceRegister();
-  var worker = getService("IContentWorker") as IContentWorker;0
-  worker.log(0, "client started ...");
-  if (deviceisActived()) {
-    worker.execute(() => {
-      const url = `${REACT_APP_LG_URL}index.html?${Date.now()}`
-      console.log(url)
-      chromiumOpen(url)
+  instance.read().then(x => {
+    startWorker()
+  }).catch(() => {
+    appCreator(() => {
+      startWorker()
     });
-  } else {
-    runProxyServer();
-  }
+    chromiumOpen(`${REACT_APP_LG_URL}index.html`)
+  })
 
 })();
+

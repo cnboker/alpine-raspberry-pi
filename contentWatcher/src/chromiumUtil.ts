@@ -25,7 +25,7 @@ export const chromiumOpen = (url: string) => {
     const axios = require('axios')
   
     var args = process.argv.slice(2);
-    console.log("args:" + args)
+    //console.log("args:" + args)
     axios.get('http://127.0.0.1:9222/json')
       .then((resp: { data: any; }) => {
         const data = resp.data;
@@ -44,7 +44,7 @@ export const chromiumOpen = (url: string) => {
                   url: args[0] || url
                 }
               }
-  
+              console.log('dataChangeUrl',dataChangeUrl)
               wsChrome.send(JSON.stringify(dataChangeUrl))
               //You can use promise-ws to exit the program
               //.then(() => process.exit())
@@ -53,11 +53,11 @@ export const chromiumOpen = (url: string) => {
         }
         else {
           logger.error("No tabs open")
-          console.log(resp.data);
+          //console.log(resp.data);
         }
       })
       .catch((err: any) => {
         // Handle Error Here
-        logger.error(err);
+        //logger.error(err);
       });
   }

@@ -1,5 +1,5 @@
 const config = {
-    root:'/media/internal/dclient/app',
+    root:`d:/projects/alpine-raspberry-pi/apppack/build`,
     port:8000
   }
   module.exports = config;

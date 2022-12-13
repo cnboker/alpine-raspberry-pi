@@ -2,10 +2,10 @@
 //import config from './config'
 //development
 
-const {root, port} = require('./config')
+const { root, port } = require('./config')
 const mime = require('./mime');
-  
- const start = (root, port) =>{
+
+const start = (root, port) => {
   const http = require("http");
   const { stat, createReadStream, existsSync } = require("fs");
   const { promisify } = require("util");
@@ -13,12 +13,15 @@ const mime = require('./mime');
   const url = require("url"),
     fileInfo = promisify(stat);
   const path = require("path");
-  
+
   http
     .createServer(async (req, res) => {
-      var uri = url.parse(req.url).pathname,
-        filename = path.join(root, uri);
-  
+      var uri = url.parse(req.url).pathname;
+      if(uri === '/'){
+        uri = 'index.html'
+      }
+      var filename = path.join(root, uri);
+      console.log('uri', uri, filename)
       if (!existsSync(filename)) {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.write("404 Not Found\n");
@@ -26,19 +29,19 @@ const mime = require('./mime');
         return;
       }
       var fileType = mime.lookup(filename);
-      console.log('fileType',fileType)
+      console.log('fileType', fileType)
       /** Calculate Size of file */
       const { size } = await fileInfo(filename);
       const range = req.headers.range;
       console.log("range", range, size, filename);
       /** Check for Range header */
-      var ffmpeg;
+
       if (range) {
         /** Extracting Start and End value from Range Header */
         let [start, end] = range.replace(/bytes=/, "").split("-");
         start = parseInt(start, 10);
         end = end ? parseInt(end, 10) : size - 1;
-  
+
         if (!isNaN(start) && isNaN(end)) {
           start = start;
           end = size - 1;
@@ -47,7 +50,7 @@ const mime = require('./mime');
           start = size - end;
           end = size - 1;
         }
-  
+
         // Handle unavailable range request
         if (start >= size || end >= size) {
           // Return the 416 Range Not Satisfiable.
@@ -65,25 +68,25 @@ const mime = require('./mime');
           "Content-Type": fileType,
           "Access-Control-Allow-Origin": "*"
         });
-  
+
         let fileStream = createReadStream(filename, { start: start, end: end });
-        pipeline(fileStream, res, err => {});
-  
+        pipeline(fileStream, res, err => { });
+
         // })
       } else {
         res.writeHead(200, {
           "Content-Length": size,
-          "Content-Type": fileType,
+          "Content-Type": `${fileType}`,
           "Access-Control-Allow-Origin": "*"
         });
-  
+
         let fileStream = createReadStream(filename);
-  
-        pipeline(fileStream, res, err => {});
+
+        pipeline(fileStream, res, err => { });
       }
     })
     .listen(port, () => console.log(`Running on ${port} port`));
 }
 
 
-start(root,port)
+start(root, port)
