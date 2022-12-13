@@ -4,7 +4,7 @@ import { chromiumOpen } from "./chromiumUtil";
 import { appCreator } from "./expressApp";
 import { instance } from "./configer";
 
-const REACT_APP_LG_URL = "http://localhost:8000/"
+const REACT_APP_LG_URL = "http://127.0.0.1:8000/"
 
 const startWorker = () => {
   var worker = getService("IContentWorker") as IContentWorker;
@@ -24,7 +24,7 @@ const startWorker = () => {
     appCreator(() => {
       startWorker()
     });
-    chromiumOpen(`${REACT_APP_LG_URL}index.html`)
+    chromiumOpen(`${REACT_APP_LG_URL}`)
   })
 
 })();

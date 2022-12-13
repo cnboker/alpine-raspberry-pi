@@ -17,3 +17,5 @@ The image automatically setup and configures:
  sudo ./bin/act --platform ubuntu-latest=lucasalt/act_base:latest  -v
 
  ### 推送docker image 到服务器
+
+ "./appbuild.sh" && "./apprun.sh" 
