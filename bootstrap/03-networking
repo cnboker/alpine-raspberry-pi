@@ -9,7 +9,7 @@ echo -e 'brcmfmac' >> /etc/modules
 
 cat <<EOF > /boot/wpa_supplicant.conf
 network={
- ssid="409_5G"
+ ssid="409"
  psk="szsong100"
 }
 

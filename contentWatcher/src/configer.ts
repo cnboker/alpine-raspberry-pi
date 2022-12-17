@@ -83,8 +83,8 @@ class Configer {
 }
 
 export const APPID = "com.ioliz.dc.app";
-export const APP_DIR = `/home/${require("os").userInfo().username}/dclient`;
-export const APP_DOWNLOAD_DIR = `${APP_DIR}/app/downloads`;
+export const APP_DIR = `/srv/dclient/app`;
+export const APP_DOWNLOAD_DIR = `${APP_DIR}/downloads`;
 export const USB_ROOT = "/tmp/usb/sda/sda1";
 export const instance: Configer = Configer.instance;
 export const Service_Server = process.env.REACT_APP_SERVICE_URL;

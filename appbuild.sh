@@ -1,20 +1,22 @@
 #!/bin/sh
-ROOTDIR="/home/$USER/dclient"
-rm -rf "${ROOTDIR}/app" "${ROOTDIR}/app/downloads" "${ROOTDIR}/staticserver" "${ROOTDIR}/proxyServer"
-mkdir -p "${ROOTDIR}/app" "${ROOTDIR}/app/downloads" "${ROOTDIR}/staticserver" "${ROOTDIR}/proxyServer"
+ROOTDIR="${PWD}"
+TARGETDIR="${PWD}/dist/dclient"
+rm -rf "${TARGETDIR}/app" "${TARGETDIR}/app/downloads" "${TARGETDIR}/staticserver" "${TARGETDIR}/proxyServer"
+mkdir -p "${TARGETDIR}/app" "${TARGETDIR}/app/downloads" "${TARGETDIR}/staticserver" "${TARGETDIR}/proxyServer"
 
 cd ./apppack
 npm run build
-cp -r ./build/* ${ROOTDIR}/app
+cp -r ./build/* ${TARGETDIR}/app
 cd ..
 
-echo 'run contentWatcher app...'
+echo 'build contentWatcher app...'
 cd ./contentWatcher
 npm run build
-cp -r ./dist/* ${ROOTDIR}/proxyServer
+cp -r ./dist/* ${TARGETDIR}/proxyServer
 
 
-echo 'run staticserver app...'
+echo 'build staticserver app...'
 cd ..
 cd ./staticserver
-cp -r ./* ${ROOTDIR}/staticserver
+cp -r ./* ${TARGETDIR}/staticserver
+cd ..

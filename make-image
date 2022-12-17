@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 #set -xe
-
 mkdir -p dist /dist
 
 OUTPUT_IMG="/dist/target.img"
@@ -32,8 +31,10 @@ ROOT_DEV="$LOOP_DEV"p2
 
 # format partitions
 mkfs.fat -F32 -n ALPINE "$BOOT_DEV"
+
 mkfs.ext4 "$ROOT_DEV"
-mkdir -p /alpine
+mkdir -p /alpine /alpine/srv
+
 mount --make-private "$ROOT_DEV" /alpine
 mkdir -p /alpine/boot
 mount --make-private "$BOOT_DEV" /alpine/boot
@@ -51,8 +52,8 @@ chmod +x bootstrap/*
 
 #cp -R staticserver/ /alpine
 #cp -R contentWatcher/ /alpine
-sh ./appbuild.sh
-cp -R /home/$USER/dclient/ /alpine/srv
+#cp custom app
+cp -R dist/dclient/ /alpine/srv
 cp -R bootstrap/ /alpine
 /alpine/enter-chroot run-parts /bootstrap/
 

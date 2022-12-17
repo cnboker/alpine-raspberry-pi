@@ -22,7 +22,7 @@ width="1920"
 height="1080"
 
 # url
-url="http://localhost"
+url="http://127.0.0.1:8000/"
 
 exec chromium-browser $url --window-size=2560,1440 --window-position=0,0 --full-screen --enable-webgl --ignore-gpu-blacklist  --remote-debugging-port=9222
 EOF
