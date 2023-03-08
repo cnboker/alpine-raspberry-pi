@@ -1,4 +1,8 @@
 #!/bin/sh
+
+kill $(lsof -t -i:3000)
+kill $(lsof -t -i:8000)
+
 ROOTDIR="${PWD}"
 TARGETDIR="${PWD}/dist/dclient"
 rm -rf "${TARGETDIR}/app" "${TARGETDIR}/app/downloads" "${TARGETDIR}/staticserver" "${TARGETDIR}/proxyServer"
@@ -13,10 +17,9 @@ echo 'build contentWatcher app...'
 cd ./contentWatcher
 npm run build
 cp -r ./dist/* ${TARGETDIR}/proxyServer
-
+cd ..
 
 echo 'build staticserver app...'
-cd ..
 cd ./staticserver
 cp -r ./* ${TARGETDIR}/staticserver
 cd ..

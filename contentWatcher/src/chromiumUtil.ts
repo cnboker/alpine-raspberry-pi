@@ -26,7 +26,7 @@ export const chromiumOpen = (url: string) => {
             console.log('dataChangeUrl', dataChangeUrl)
             wsChrome.send(JSON.stringify(dataChangeUrl))
               //You can use promise-ws to exit the program
-              .then(() => process.exit())
+              //.then(() => process.exit())
               .catch((e: any) => {
                 console.log('wschrome error', e)
               })
