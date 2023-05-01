@@ -1,21 +1,43 @@
 # Alpine Raspberry P I
 
-This is a system install of Alpine linux for Raspberry Pi 3B, 3B+ and 4 image ready to burn to an SD card via [balenaEtcher](https://www.balena.io/etcher/) (there's no need to gunzip image).
+建立alpine测试环境.
 
-The image automatically setup and configures:
+在wsl环境下构建alpine docker开发环境模拟respberry环境:
 
-* root user [pwd: raspberry]
-* pi user [pwd: raspberry]
-* ethernet
-* wifi (edit `wpa_supplicant.conf` in the boot partition, on first boot it will be copied)
-* bluetooth
-* avahi
-* swap
-* openssh server
-* root partition auto-expand on first boot
+* 构建alpine docker
+* 安装chroumin
+* 启动alpine docker run
 
-sudo bash ./appbuild.sh && sudo ./bin/act --platform ubuntu-latest=lucasalt/act_base:latest 
 
- ### 推送docker image 到服务器
+ ### 构建alpine docker
 
- "./appbuild.sh" && "./apprun.sh" 
+启动ubuntu虚拟机,执行以下命令
+
+ ```bash
+ docker run \
+-it \
+--net=host \
+-e DISPLAY=$DISPLAY \
+-v $PWD:/dsclient \
+-v /tmp/.X11-unix:/tmp/.X11-unix \
+--name alpine-chromium \
+alpine sh && \
+\
+docker start alpine-chromium && \
+docker exec -it alpine-chromium sh
+ ```
+
+ ### 在alpine-chromium内安装chromium
+ ```bash
+sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+sed -i '$a https://mirrors.tuna.tsinghua.edu.cn/alpine/edge/testing/' /etc/apk/repositories
+apk update
+apk add wqy-zenhei chromium nodejs npm
+apk add mesa-egl dbus setxkbmap kbd xrandr xset
+sed -i '$d' /etc/apk/repositories
+apk update
+export DISPLAY=:0 && chromium-browser --no-sandbox&
+ ```
+
+### 在开发环境下调试修改代码
+

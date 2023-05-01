@@ -1,7 +1,7 @@
 #!/bin/sh
-
-kill $(lsof -t -i:3000)
-kill $(lsof -t -i:8000)
+killall -9 node
+#kill $(lsof -t -i:3000)
+#kill $(lsof -t -i:8000)
 
 ROOTDIR="${PWD}"
 TARGETDIR="${PWD}/dist/dclient"
