@@ -82,22 +82,8 @@ export const listFiles = (path: string): Promise<Message> => {
   });
 };
 
-export const mkdir = (path: string): Promise<Message> => {
-  return new Promise((resolve, reject) => {
-    fs.mkdir(path, function (err: string) {
-      if (err) {
-        reject({
-          returnValue: false,
-          errorCode: "mkdir ERROR",
-          errorText: err,
-        });
-      } else {
-        return resolve({
-          returnValue: true,
-        });
-      }
-    });
-  });
+export const mkdir = (path: string): void => {
+    fs.mkdirSync(path, { recursive: true })
 };
 
 export const rmdir = (path: string): Promise<Message> => {

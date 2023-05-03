@@ -22,8 +22,7 @@ export default () => {
 
   const [runStep, setRunStep] = useState(RunStep.RequestQR);
   const [message, setMessage] = useState();
-  const [id, setId] = useState();
-  const delay = 3000;
+  const delay = 2000;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const qrState = useSelector((state) => state.qrReducer);
@@ -49,7 +48,6 @@ export default () => {
       setRunStep(() => RunStep.Finished);
       setMessage(() => "config finished!");
       configInfo.token = token.access_token;
-      configInfo.deviceId = id;
       dispatch(postConfigInfo(configInfo))
     }else if(runStep === RunStep.Finished){
       navigate("/play");

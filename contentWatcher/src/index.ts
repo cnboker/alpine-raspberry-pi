@@ -5,7 +5,6 @@ import { appCreator } from "./expressApp";
 import { instance } from "./configer";
 
 const REACT_APP_LG_URL = "http://127.0.0.1:8000/"
-
 const startWorker = () => {
   var worker = getService("IContentWorker") as IContentWorker;
   worker.execute(() => {
@@ -16,16 +15,12 @@ const startWorker = () => {
 }
 
 (async () => {
-  console.log('start..')
   serviceRegister();
+  appCreator(()=>startWorker());
   instance.read().then(x => {
     startWorker()
   }).catch(() => {
-    appCreator(() => {
-      startWorker()
-    });
-    chromiumOpen(`${REACT_APP_LG_URL}`)
   })
-
+  chromiumOpen(`${REACT_APP_LG_URL}`)
 })();
 

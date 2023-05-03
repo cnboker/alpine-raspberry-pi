@@ -57,7 +57,9 @@ export const postConfigInfo = (configInfo) => (dispatch) => {
 export const getConfigInfo = () => (dispatch) => {
   api.getConfigInfo().then((response) => {
     dispatch(receiveConfig(response.data))
-  });
+  }).catch(()=>{
+    dispatch(receiveConfig({}))
+  })
 };
 
 //key:deviceId

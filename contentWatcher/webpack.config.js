@@ -1,10 +1,10 @@
 const path = require('path');
-
+require('dotenv').config()
 module.exports = {
   entry: './src/index.ts',
   devtool: 'inline-source-map',
   target: 'node',
-  mode:'development',
+  mode: 'development',
   node: {
     // Need this when working with express, otherwise the build fails
     __dirname: false,   // if you don't put this is, __dirname
@@ -15,7 +15,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude:/node_modules/
+        exclude: /node_modules/
       },
     ],
   },
@@ -26,6 +26,7 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  plugins: [],
   externals: {
     bufferutil: "bufferutil",
     "utf-8-validate": "utf-8-validate",

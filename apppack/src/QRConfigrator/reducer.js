@@ -9,12 +9,12 @@ import merge from "lodash/merge";
 var defaultState = {
   QR: {},
   token: {},
-  configInfo: {},
+  configInfo: undefined,
   instance: {},
 };
 
 export const qrReducer = (state = defaultState, action) => {
-  Object.freeze(state);
+ 
   let newState = merge({}, state);
   switch (action.type) {
     case RECEIVE_QR:
@@ -24,6 +24,7 @@ export const qrReducer = (state = defaultState, action) => {
       newState.token = action.payload;
       return newState;
     case RECEIVE_CONFIG:
+      console.log("RECEIVE_CONFIG", newState)
       newState.configInfo = action.payload;
       return newState;
     case RECEIVE_INSTANCE:

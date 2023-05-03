@@ -2,7 +2,7 @@ require("dotenv").config();
 import { readFile, writeFile, removeFile, fileExists, mkdir } from "./imps/FileService";
 import { ConfigModel } from "./dataModels/ConfigModel"
 import { EventEmitter } from "fbemitter";
-import { APP_ID } from "./constants";
+import { APP_ID, REACT_APP_AUTH_URL, REACT_APP_SERVICE_URL } from "./constants";
 
 class Configer {
   private static _instance: Configer;
@@ -52,7 +52,9 @@ class Configer {
   }
 
   rootDirReady = async () => {
+   
     if (!fileExists(APP_DIR)) {
+      console.log('APP_DIR',APP_DIR)
       await mkdir(APP_DIR)
     }
   };
@@ -81,14 +83,15 @@ class Configer {
     return this._instance || (this._instance = new this());
   }
 }
-
+const os = require("os");
+const HOME = os.homedir();
 export const APPID = "com.ioliz.dc.app";
-export const APP_DIR = `/srv/dclient/app`;
+export const APP_DIR = `${HOME}/srv/dclient/app`;
 export const APP_DOWNLOAD_DIR = `${APP_DIR}/downloads`;
 export const USB_ROOT = "/tmp/usb/sda/sda1";
 export const instance: Configer = Configer.instance;
-export const Service_Server = process.env.REACT_APP_SERVICE_URL;
-export const Auth_Server = process.env.REACT_APP_AUTH_URL;
+export const Service_Server = REACT_APP_SERVICE_URL;
+export const Auth_Server = REACT_APP_AUTH_URL;
 //是否是单元测试
 export const isInTest = typeof global.it === 'function';
 //事件类型

@@ -27,11 +27,13 @@ export default class ContentWorker implements IContentWorker {
     this.contentNotify = <IContentNotify>getService("IContentNotify");
     this.fileDownloader = <IFileDownloader>getService("IFileDownloader");
     this.mqttDispather = <IMQTTDispatcher>getService("IMQTTDispatcher");
+
     this.mqttDispather.connect(instance.mqttServer, instance.deviceId);
 
     this.mqttDispather.onSubContentNotify = (data) => {
       //fileServer:http://ip:port/scott
       //发布目录/dist/index.html
+      console.log('data is ready', data)
       var fileList = data.files.map(
         (x) =>
           <IResourceInfo>{
@@ -62,7 +64,7 @@ export default class ContentWorker implements IContentWorker {
         });
       })
       .catch((e) => {
-        console.log("read downloadlist.json", e);
+        console.log("downloadlist.json not exist");
       });
     //检查index.html是否存在，如果存在则加载
     if (fileExists(`${APP_DOWNLOAD_DIR}/index.html`)) {

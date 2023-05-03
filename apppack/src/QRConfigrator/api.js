@@ -22,11 +22,7 @@ export const requestToken = (sessionId) => {
 
 export const postDeviceInfo = (token, authorizeCode) => {
   var url = `${process.env.REACT_APP_LOCAL_PROXY_URL}/api/postDeviceInfo`;
-  return axios({
-    url,
-    method: "post",
-    data: { authorizeCode, token },
-  });
+  return axios.post(url, { authorizeCode, token });
 };
 
 export const postConfigInfo = (info) => {
