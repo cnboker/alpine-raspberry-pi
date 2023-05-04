@@ -3,11 +3,12 @@ import {
   IFileDownloader,
   IResourceInfo
 } from "../interfaces/IContentWorker";
-import { APP_DIR, APP_DOWNLOAD_DIR, instance } from "../configer";
-import { writeFile, fileExists, removeFile } from './FileService'
-import { download, downloadStatusQuery } from '../webosApis/downloadManager'
+import { APP_DOWNLOAD_DIR, instance } from "../configer";
+import { fileExists, removeFile } from './FileService'
+import { download, downloadState } from '../webosApis/downloadManager'
 import { IMQTTDispatcher } from "../interfaces/IMQTTDispatcher";
 import { getService } from "./ServiceProiver";
+import { mkdir } from "./FileService";
 
 type FileInfo = {
   dir: string
@@ -24,17 +25,10 @@ export class FileDownloader implements IFileDownloader {
     this.onOneDownloadComplete = async (res: IResourceInfo) => {
       const downloadList = this.fileList.filter(x => x.status === DownloadStatus.Origin || x.status === undefined)
       const jsonContent = JSON.stringify(downloadList)
-      // console.log('this.fileList', jsonContent)
-      // try {
-      //   await writeFile(`${APP_DIR}/downloadlist.json`, jsonContent);
-      // } catch (err) {
-      //   console.log("write downlaodList.json error", err);
-      //   //return;
-      // }
       if (downloadList.length > 0) {
         this.singleFileDownload(downloadList[0])
-      } else{
-        if(!this.fileList.find(x=>x.status === DownloadStatus.Origin)){
+      } else {
+        if (!this.fileList.find(x => x.status === DownloadStatus.Origin)) {
           console.log('download complete', this.fileList)
           this.onDownloadComplete(this.fileList);
         }
@@ -52,10 +46,9 @@ export class FileDownloader implements IFileDownloader {
     this.fileList = fileList;
     if (fileList.length > 0) {
       this.singleFileDownload(fileList[0])
-    }else{
+    } else {
       this.onDownloadComplete(fileList);
     }
-    this.checkDownloadStatus();
   }
 
 
@@ -106,58 +99,35 @@ export class FileDownloader implements IFileDownloader {
     return true
   }
 
-  private checkDownloadStatus() {
-    const mqttDispather = <IMQTTDispatcher>getService("IMQTTDispatcher");
-    const timer = setInterval(() => {
-      const downloadList = this.fileList.filter(x => x.status == DownloadStatus.Begin)
-      const pendingList = this.fileList.filter(x => x.status === DownloadStatus.Origin || x.status === undefined)
-      if (pendingList.length === 0) {
-        console.log('clearInterval...')
-        clearInterval(timer)
-      }
-      for (const item of downloadList) {
-        if(item.ticket === 0)continue
-        downloadStatusQuery(item.ticket).then(result => {
-          const { completed } = result;
-          mqttDispather.pubDownloadProgress(result)
-          if (completed) {
-            item.status = DownloadStatus.Success
-            this.onOneDownloadComplete(item)
-            console.log('downloadStatusQuery finished', item)
-          }
-        })
-        .catch(e=>{
-          clearInterval(timer)
-        })
-      }
-    }, 2000);
-  }
 
   private async singleFileDownload(resource: IResourceInfo): Promise<void> {
     resource.status = DownloadStatus.Origin;
 
     const { dir, fileName } = this.getDownloadFileInfo(resource.resourceUrl)
     const canDownload = await this.canDownload(resource)
-    //console.log("begin download", resource.resourceUrl);
-
     if (!canDownload) {
       this.onOneDownloadComplete(resource)
       return;
     }
-    //console.log("begin download", dir, fileName, fullFileName, resource.resourceUrl);
-    download(
-      resource.resourceUrl,
-      dir,
-      fileName,
-      instance.token,
-    ).then(ticket => {
-      resource.ticket = ticket;
-      resource.status = DownloadStatus.Begin
-    })
-      .catch(e => {
-        console.log("singleFileDownload error", e);
+    const mqttDispather = <IMQTTDispatcher>getService("IMQTTDispatcher");
+
+    const fullpath = dir + '/' + fileName;
+    mkdir(dir);
+    download(resource.resourceUrl,
+      fullpath,
+      (state: downloadState) => {
+        mqttDispather.pubDownloadProgress(state)
+      }, (err: any) => {
+        console.log("singleFileDownload error", err);
         resource.status = DownloadStatus.Failure;
         this.onOneDownloadComplete(resource)
-      })
+      },
+      () => {
+        resource.status = DownloadStatus.Success
+        this.onOneDownloadComplete(resource);
+        console.log('singleFileDownload finished', resource)
+      });
+
+
   }
 }

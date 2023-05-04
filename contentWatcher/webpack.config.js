@@ -1,5 +1,5 @@
 const path = require('path');
-require('dotenv').config()
+
 module.exports = {
   entry: './src/index.ts',
   devtool: 'inline-source-map',

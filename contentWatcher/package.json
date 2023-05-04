@@ -26,6 +26,8 @@
     "http-proxy": "^1.18.1",
     "mqtt": "^3.0.0",
     "querystring": "^0.2.1",
+    "request": "^2.88.2",
+    "request-progress": "^3.0.0",
     "string-format": "^2.0.0",
     "supertest": "^6.3.3",
     "ts-loader": "^9.4.2",
