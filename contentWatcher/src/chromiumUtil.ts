@@ -1,8 +1,8 @@
-export const chromiumOpen = (url:string) =>{
+export const chromiumOpen1 = (url:string) =>{
   const childProc = require('child_process');
   childProc.exec(`google-chrome ${url}`);
 }
-export const chromiumOpen1 = (url: string) => {
+export const chromiumOpen = (url: string) => {
   const WebSocket = require("ws");
 
   const axios = require('axios')

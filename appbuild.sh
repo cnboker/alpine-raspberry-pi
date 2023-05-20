@@ -1,11 +1,8 @@
 #!/bin/sh
 killall -9 node
-#kill $(lsof -t -i:3000)
-#kill $(lsof -t -i:8000)
 
-ROOTDIR="${PWD}"
-TARGETDIR="${PWD}/dist/dclient"
-rm -rf "${TARGETDIR}/app" "${TARGETDIR}/app/downloads" "${TARGETDIR}/staticserver" "${TARGETDIR}/proxyServer"
+TARGETDIR="${HOME}/dclient"
+rm -rf "${TARGETDIR}/app"  "${TARGETDIR}/staticserver" "${TARGETDIR}/proxyServer"
 mkdir -p "${TARGETDIR}/app" "${TARGETDIR}/app/downloads" "${TARGETDIR}/staticserver" "${TARGETDIR}/proxyServer"
 
 cd ./apppack

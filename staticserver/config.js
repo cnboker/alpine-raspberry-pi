@@ -1,9 +1,8 @@
-const path = require('path');
-const dclientDir = path.resolve(__dirname, '..')
-const appdir = path.join(dclientDir,'app')
+const os = require("os");
+const HOME = os.homedir();
+const APP_DIR = `${HOME}/dclient/app`;
 const config = {
-    //root:`/srv/dclient/app`,
-    root:appdir,
-    port:8000
-  }
-  module.exports = config;
+  root: APP_DIR,
+  port: 8000
+}
+module.exports = config;
