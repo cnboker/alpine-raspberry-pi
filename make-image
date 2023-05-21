@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
 #set -xe
+
+einfo() {
+	printf '\n\033[1;36m> %s\033[0m\n' "$@" >&2  # bold cyan
+}
+
 mkdir -p dist /dist
 
 OUTPUT_IMG="/dist/target.img"
@@ -50,10 +55,8 @@ sh ./chroot-install
 
 chmod +x bootstrap/*
 
-#cp -R staticserver/ /alpine
-#cp -R contentWatcher/ /alpine
-#cp custom app
-cp -R dist/dclient/ /alpine/srv
+./appbuild.sh
+cp -R "${HOME}/dclient" /alpine/srv
 cp -R bootstrap/ /alpine
 /alpine/enter-chroot run-parts /bootstrap/
 

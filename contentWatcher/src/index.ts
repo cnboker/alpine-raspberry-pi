@@ -8,7 +8,7 @@ const REACT_APP_LG_URL = "http://127.0.0.1:8000/"
 const startWorker = () => {
   var worker = getService("IContentWorker") as IContentWorker;
   worker.execute(() => {
-    const url = `${REACT_APP_LG_URL}downloads/index.html?${Date.now()}`
+    const url = `${REACT_APP_LG_URL}/index.html?${Date.now()}`
     console.log(url)
     chromiumOpen(url)
   });
@@ -21,6 +21,6 @@ const startWorker = () => {
     startWorker()
   }).catch(() => {
   })
-  chromiumOpen(`${REACT_APP_LG_URL}`)
+  chromiumOpen(`http://127.0.0.1:8080/`)
 })();
 

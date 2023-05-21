@@ -41,3 +41,10 @@ export DISPLAY=:0 && chromium-browser --no-sandbox&
 
 ### 在开发环境下调试修改代码
 
+sudo ./bin/act --platform ubuntu-latest=lucasalt/act_base:latest -v
+
+### 终端程序服务说明
+
+http://localhost:3000: contentWatcher程序本地代理端口
+http://localhost:8080: app的虚拟端口
+http://localhost:8000: 资源下载内容虚拟端口
