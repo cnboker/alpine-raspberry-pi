@@ -1,11 +1,17 @@
+export  enum LogLevel {
+    INFO = 0,
+    WARN = 1,
+    ERROR = 2
+}
 /*
 1. 定时轮询监视是否有新的通知
 2. 如果有更新通知，并根据通知类型做相应处理
 */
 export interface IContentWorker {
     contentNotify: IContentNotify;
-    execute(cb: () => void): void;
-    log(level: number, message: string): void;
+    //callback:异步任务完成通知
+    execute(callback: (message:string) => void): void;
+    log(level: LogLevel, message: string): void;
 }
 
 export interface IContentNotify {

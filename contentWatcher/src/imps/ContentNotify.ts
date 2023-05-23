@@ -33,7 +33,7 @@ export default class ContentNotify implements IContentNotify {
     if (!instance.token) return;
     this.clientAPI.heartbeat(instance.deviceId).then(x => {
       console.log("update beatheart", x.data);
-    });
+    }).catch(() => console.log("heartbeat error"))
   }
 
   snapshotProcess(): void {

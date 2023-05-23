@@ -1,6 +1,7 @@
 #!/bin/sh
 
 apk add chromium
+apk add unclutter-xfixes
 #创建x11自启动
 cat <<EOF > /srv/.profile
 #!/bin/sh
@@ -17,6 +18,9 @@ xset -dpms
 xset s off
 xset s noblank
 
+# hide mouse
+unclutter-xfixes --timeout 1 &
+
 # screen sizegg 
 width="1920"
 height="1080"
@@ -24,6 +28,6 @@ height="1080"
 # app url
 url="http://127.0.0.1:8080/"
 #--window-size=2560,1440 --window-position=0,0 
-exec chromium-browser $url --full-screen --enable-webgl --ignore-gpu-blacklist  --remote-debugging-port=9222
+exec chromium-browser $url --full-screen --kiosk --enable-webgl --ignore-gpu-blacklist  --remote-debugging-port=9222
 EOF
 

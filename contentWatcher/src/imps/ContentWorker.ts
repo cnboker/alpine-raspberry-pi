@@ -3,11 +3,12 @@ import {
   IContentNotify,
   IResourceInfo,
   IFileDownloader,
+  LogLevel,
 } from "../interfaces/IContentWorker";
 import { readFile, fileExists, unzipFile } from "./FileService";
 import { getService } from "./ServiceProiver";
 import { IMQTTDispatcher } from "../interfaces/IMQTTDispatcher";
-import { APP_DIR, APP_DOWNLOAD_DIR, instance, isInTest } from "../configer";
+import { APP_DIR, APP_DOWNLOAD_DIR, instance } from "../configer";
 import IClientAPI from "../interfaces/IClientAPI";
 
 //main
@@ -17,17 +18,18 @@ export default class ContentWorker implements IContentWorker {
   mqttDispather: IMQTTDispatcher;
   clientAPI: IClientAPI;
 
-  log(level: number, message: string): void {
-    const clientAPI = <IClientAPI>getService("IClientAPI");
-    clientAPI.log(instance.deviceId, level, message);
+  log(level: LogLevel, message: string): void {
+    this.clientAPI.log(instance.deviceId, level, message)
+      .then(() => console.log('log...'))
+      .catch(() => console.log('write log error'))
   }
 
   //callback defined
-  execute(cb: { (): void }): void {
+  execute(cb: { (message: string): void }): void {
     this.contentNotify = <IContentNotify>getService("IContentNotify");
     this.fileDownloader = <IFileDownloader>getService("IFileDownloader");
     this.mqttDispather = <IMQTTDispatcher>getService("IMQTTDispatcher");
-
+    this.clientAPI = <IClientAPI>getService("IClientAPI");
     this.mqttDispather.connect(instance.mqttServer, instance.deviceId);
 
     this.mqttDispather.onSubContentNotify = (data) => {
@@ -41,10 +43,10 @@ export default class ContentWorker implements IContentWorker {
             status: 0,
           }
       );
-      //this.download(fileList, cb)
+
       this.download(fileList, () => {
         this.zipPipe(fileList).then(() => {
-          cb && cb();
+          cb && cb('');
         });
       });
     };
@@ -58,8 +60,9 @@ export default class ContentWorker implements IContentWorker {
       })
       .then((fileList) => {
         this.download(fileList, () => {
+          //下载完成
           this.zipPipe(fileList).then(() => {
-            cb && cb();
+            cb && cb('检查是否包含zip文件，如果包含做解压操作');
           });
         });
       })
@@ -68,7 +71,7 @@ export default class ContentWorker implements IContentWorker {
       });
     //检查index.html是否存在，如果存在则加载
     if (fileExists(`${APP_DOWNLOAD_DIR}/index.html`)) {
-      cb && cb();
+      cb && cb('检查downloads文件夹是否包含index.html文件，包含这导航到downloads目录');
     }
 
     this.contentNotify.watch();
