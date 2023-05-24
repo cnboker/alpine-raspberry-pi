@@ -1,18 +1,10 @@
-import { IContentWorker, LogLevel } from "./interfaces/IContentWorker";
+import { IContentWorker } from "./interfaces/IContentWorker";
 import { serviceRegister, getService } from "./imps/ServiceProiver";
-import { chromiumOpen } from "./chromiumUtil";
 import { appCreator } from "./expressApp";
 import { instance } from "./configer";
-
-const REACT_APP_LG_URL = "http://127.0.0.1:8000/"
-const startWorker = () => {
-  var worker = getService("IContentWorker") as IContentWorker;
-  worker.execute((message: string) => {
-    const url = `${REACT_APP_LG_URL}/index.html?${Date.now()}`
-    worker.log(LogLevel.INFO, message)
-    chromiumOpen(url)
-  });
-}
+import { writeFile } from "./imps/FileService";
+import { APP_DOWNLOAD_DIR } from "./configer";
+import './logger'
 
 (async () => {
   serviceRegister();
@@ -25,12 +17,18 @@ const startWorker = () => {
       await instance.read();
       console.log('config loaded')
       clearInterval(timer1)
-      startWorker();
+      var worker = getService("IContentWorker") as IContentWorker;
+      worker.execute(async (message: string) => {
+        console.log(message)
+        await writeFile(
+          `${APP_DOWNLOAD_DIR}/timestamp`,
+          Date.now().toString()
+        );
+      });
     } catch {
 
     }
   }, 1000)
 
-  chromiumOpen(`http://127.0.0.1:8080/`)
 })();
 

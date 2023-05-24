@@ -21,7 +21,7 @@ export default class ContentWorker implements IContentWorker {
   log(level: LogLevel, message: string): void {
     this.clientAPI.log(instance.deviceId, level, message)
       .then(() => console.log('log...'))
-      .catch(() => console.log('write log error'))
+      .catch((e) => console.log('write log error', e))
   }
 
   //callback defined
@@ -46,7 +46,7 @@ export default class ContentWorker implements IContentWorker {
 
       this.download(fileList, () => {
         this.zipPipe(fileList).then(() => {
-          cb && cb('');
+          cb && cb('download finished notify.');
         });
       });
     };
@@ -69,10 +69,7 @@ export default class ContentWorker implements IContentWorker {
       .catch((e) => {
         console.log("downloadlist.json not exist");
       });
-    //检查index.html是否存在，如果存在则加载
-    if (fileExists(`${APP_DOWNLOAD_DIR}/index.html`)) {
-      cb && cb('检查downloads文件夹是否包含index.html文件，包含这导航到downloads目录');
-    }
+
 
     this.contentNotify.watch();
   }

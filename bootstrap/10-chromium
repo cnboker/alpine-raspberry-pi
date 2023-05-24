@@ -28,6 +28,6 @@ height="1080"
 # app url
 url="http://127.0.0.1:8080/"
 #--window-size=2560,1440 --window-position=0,0 
-exec chromium-browser $url --full-screen --kiosk --enable-webgl --ignore-gpu-blacklist  --remote-debugging-port=9222
+exec chromium-browser $url --full-screen --kiosk --enable-webgl --ignore-gpu-blacklist  --remote-debugging-port=9222 
 EOF
 

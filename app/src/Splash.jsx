@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { getConfigInfo } from "./QRConfigrator/actions";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";

@@ -54,7 +54,6 @@ export const fileExists = (path: string): boolean => {
   let exists = false;
   try {
     if (fs.existsSync(path)) {
-      console.log("The file exists.");
       exists = true;
     }
   } catch (err) {

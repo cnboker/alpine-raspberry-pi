@@ -1,0 +1,1 @@
+scp -r  ${HOME}/dclient/*  root@192.168.0.104:/srv/dclient
