@@ -1,0 +1,60 @@
+#!/bin/sh
+
+set -xe
+
+#Install the necessary firmware
+apk add linux-firmware-brcm
+apk add raspberrypi-libs
+
+#Install hostapd and dnsmasq
+apk add hostapd
+apk add dnsmasq
+
+#configure /etc/hostapd/hostapd.conf
+cat <<EOF >/etc/hostapd/hostapd.conf
+interface=wlan0
+driver=nl80211
+ssid=Pi-AP
+hw_mode=g
+channel=1
+macaddr_acl=0
+auth_algs=1
+wpa=2
+wpa_key_mgmt=WPA-PSK
+wpa_passphrase=12345678
+rsn_pairwise=CCMP
+wpa_pairwise=CCMP
+EOF
+
+#configure your /etc/dnsmasq.conf
+cat <<EOF >/etc/dnsmasq.conf
+interface=wlan0
+dhcp-range=10.0.0.2,10.0.0.5,255.255.255.0,12h
+EOF
+
+#configure static ips for wlan0 in the file /etc/network/interfaces
+cat <<EOF >/etc/network/interfaces
+auto wlan0
+iface wlan0 inet static
+  address 10.0.0.1
+  netmask 255.255.255.0
+EOF
+
+service dnsmasq start
+service hostapd start
+
+#Enable the services permanently on every bootup
+rc-update add dnsmasq     
+rc-update add hostapd 
+
+#remove ap service
+rc-update del dnsmasq     
+rc-update del hostapd 
+
+#install iwd tools
+apk add iwd
+rc-service iwd start
+
+#Add redirect for all inbound http traffic for 10.0.0.1 (which we defined earlier in dnsmasq.conf) 
+#to our Node.js server on port 3000 (10.0.0.1:3000)
+iptables -t nat -I PREROUTING -d 10.0.0.1 -p tcp --dport 80 -j DNAT --to-destination 10.0.0.1:3000

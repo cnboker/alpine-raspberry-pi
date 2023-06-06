@@ -1,6 +1,6 @@
 import { IContentWorker } from "./interfaces/IContentWorker";
 import { serviceRegister, getService } from "./imps/ServiceProiver";
-import { appCreator } from "./expressApp";
+import { appCreator } from "./osapi/server";
 import { instance } from "./configer";
 import { writeFile } from "./imps/FileService";
 import { APP_DOWNLOAD_DIR } from "./configer";
